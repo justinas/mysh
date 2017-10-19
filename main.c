@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #include "bytebuf.h"
+#include "token.h"
 
 void printwd()
 {
@@ -16,7 +17,7 @@ int main() {
     fflush(stdout);
     setbuf(stdout, NULL);
 
-    bytebuf* data = bytebuf_new();
+    bytebuf* line = bytebuf_new();
 
     printwd();
 
@@ -25,15 +26,24 @@ int main() {
     while ((n = read(0, buf, sizeof(buf))) > 0) {
         char *endl = NULL;
         if ((endl = memchr((void*) buf, '\n', n))) {
-            bytebuf_extend(data, buf, (char*)endl - buf + 1);
-            bytebuf_append(data, '\0');
-            printf("%lu %s", strlen(data->data), data->data);
-            bytebuf_clear(data);
+            bytebuf_extend(line, buf, (char*)endl - buf + 1);
+            bytebuf_append(line, '\0');
+            printf("%lu %s", strlen(line->data), line->data);
+            bytebuf_clear(line);
 
-            bytebuf_extend(data, endl+1, (size_t)(buf + n - endl - 1));
+            char *remain = line->data;
+            while (*remain != '\n') {
+                token* tok = token_try_ident(&remain);
+                if (tok) {
+                    printf("%d %s\n", tok->type, ((bytebuf*)tok->content)->data);
+                }
+                token_free(tok);
+            }
+
+            bytebuf_extend(line, endl+1, (size_t)(buf + n - endl - 1));
             printwd();
         } else {
-            bytebuf_extend(data, buf, n);
+            bytebuf_extend(line, buf, n);
         }
     }
 }

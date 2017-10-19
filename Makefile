@@ -1,6 +1,6 @@
 CFLAGS = -g -Wall -std=c99
 
-mysh: bytebuf.o main.o
+mysh: bytebuf.o main.o token.o
 	$(CC) -o mysh $^
 
 clean:

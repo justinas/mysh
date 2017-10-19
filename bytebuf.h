@@ -1,7 +1,7 @@
-#include <stdlib.h>
-
 #ifndef BYTEBUF_H
 #define BYTEBUF_H
+
+#include <stdlib.h>
 
 #define BYTEBUF_INITIAL_CAP 128
 
