@@ -1,6 +1,6 @@
-CFLAGS = -g -Wall -std=c99
+CFLAGS = -g -Wall -std=gnu99
 
-mysh: bytebuf.o main.o token.o
+mysh: builtins.o bytebuf.o command.o main.o token.o
 	$(CC) -o mysh $^
 
 clean:

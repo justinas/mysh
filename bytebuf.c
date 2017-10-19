@@ -31,6 +31,12 @@ void bytebuf_append(bytebuf* b, char c) {
     bytebuf_extend(b, a, 1);
 }
 
+bytebuf* bytebuf_clone(bytebuf* b) {
+    bytebuf* my = bytebuf_new();
+    bytebuf_extend(my, b->data, b->len);
+    return my;
+}
+
 void bytebuf_clear(bytebuf* b) {
     b->len = 0;
 }
