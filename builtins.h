@@ -10,6 +10,7 @@ typedef struct builtin_spec {
 } builtin_spec;
 
 void builtin_cd(int argc, char** argv);
+void builtin_echo(int argc, char** argv);
 void builtin_exit(int argc, char** argv);
 
 extern builtin_spec BUILTINS[];
