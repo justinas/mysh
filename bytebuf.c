@@ -31,6 +31,10 @@ void bytebuf_append(bytebuf* b, char c) {
     bytebuf_extend(b, a, 1);
 }
 
+void bytebuf_clear(bytebuf* b) {
+    b->len = 0;
+}
+
 void bytebuf_extend(bytebuf* b, char *cont, size_t n) {
     while (b->len + n > b->cap) {
         bytebuf_grow(b);

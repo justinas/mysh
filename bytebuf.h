@@ -14,7 +14,9 @@ typedef struct bytebuf {
 } bytebuf;
 
 bytebuf* bytebuf_new();
+void bytebuf_append(bytebuf* b, char c);
 char* bytebuf_at(bytebuf* b, size_t i);
+void bytebuf_clear(bytebuf* b);
 void bytebuf_extend(bytebuf* b, char *cont, size_t n);
 void bytebuf_destroy(bytebuf *b);
 
