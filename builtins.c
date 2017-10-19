@@ -5,6 +5,12 @@
 
 #include "builtins.h"
 
+builtin_spec BUILTINS[] = {
+    {"cd", builtin_cd},
+    {"exit", builtin_exit},
+    {NULL, NULL},
+};
+
 void builtin_cd(int argc, char** argv) {
     assert(strcmp(argv[0], "cd") == 0);
 
@@ -17,4 +23,11 @@ void builtin_cd(int argc, char** argv) {
     else if (argc > 2) {
         fprintf(stderr, "cd: Too many arguments\n");
     }
+}
+
+void builtin_exit(int argc, char** argv) {
+    assert(strcmp(argv[0], "exit") == 0);
+
+    if (argc == 1) exit(0);
+    fprintf(stderr, "exit: Too many arguments\n");
 }

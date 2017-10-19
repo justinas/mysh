@@ -43,8 +43,15 @@ void run_line(bytebuf* line) {
     }
 
     command *cmd = command_new(toks, len);
-    if (cmd->argc > 0 && strcmp(cmd->argv[0], "cd") == 0) {
-        builtin_cd(cmd->argc, cmd->argv);
+    if (cmd->argc > 0) {
+        builtin_spec *builtins = BUILTINS;
+        while (builtins->name) {
+            if (strcmp(builtins->name, cmd->argv[0]) == 0) {
+                builtins->fn(cmd->argc, cmd->argv);
+                break;
+            }
+            builtins++;
+        }
     }
     command_free(cmd);
 
