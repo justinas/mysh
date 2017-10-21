@@ -4,6 +4,9 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <readline/history.h>
+#include <readline/readline.h>
+
 #include "builtins.h"
 #include "bytebuf.h"
 #include "command.h"
@@ -14,17 +17,17 @@ void printwd()
 {
     static char wd[4096];
     getcwd(wd, sizeof(wd));
-    printf("%s$ ", wd);
+    printf("%s", wd);
 }
 
-void run_line(bytebuf* line) {
+void run_line(char* line) {
     size_t cap = 1;
     size_t len = 0;
 
     token** toks = malloc(sizeof(token**));
     if (!toks) abort();
 
-    char *remain = line->data;
+    char *remain = line;
     while (*remain && *remain != '\n') {
         token* tok = token_try(&remain);
         if (tok == TOKEN_SYNTAX_ERROR) {
@@ -79,10 +82,16 @@ int main() {
     setbuf(stdout, NULL);
     signal(SIGINT, SIG_IGN);
 
-    bytebuf* line = bytebuf_new();
+    char *line;
+    while ((line = readline("mysh$ "))) {
+        add_history(line);
+        run_line(line);
+        free(line);
+    }
 
+    /*
     printwd();
-
+    bytebuf* line = bytebuf_new();
     char buf[4];
     ssize_t n = 0;
     while ((n = read(0, buf, sizeof(buf))) > 0) {
@@ -91,7 +100,7 @@ int main() {
             bytebuf_extend(line, buf, (char*)endl - buf + 1);
             bytebuf_append(line, '\0');
 
-            run_line(line);
+            run_line(line->data);
 
             bytebuf_clear(line);
 
@@ -101,4 +110,5 @@ int main() {
             bytebuf_extend(line, buf, n);
         }
     }
+    */
 }

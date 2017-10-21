@@ -8,9 +8,10 @@
 // to be compatible with the execv family.
 // argc is NOT incremented accordingly.
 command* command_new(token** toks, size_t n) {
-    command* c = malloc(sizeof(command));
+    command* c = calloc(sizeof(command), 1);
     c->argv = calloc(sizeof(char*), n + 1);
     c->argc = 0;
+    c->stdin_path = NULL;
 
     for (size_t i = 0; i < n; i++) {
         if (toks[i]->type == Ident) {

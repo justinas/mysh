@@ -22,11 +22,11 @@ void exec_external(command *cmd) {
                     fin = open(cmd->stdin_path, O_CREAT);
                     if (fin == -1) {
                         perror("fin");
-                        return;
+                        exit(1);
                     }
                     if (dup2(fin, STDIN_FILENO) == -1) {
                         perror("dup2");
-                        return;
+                        exit(1);
                     }
                 }
 
@@ -37,7 +37,7 @@ void exec_external(command *cmd) {
                 if (execvp(cmd->argv[0], cmd->argv) == -1) {
                     perror("execvp");
                 }
-                return;
+                exit(1);
             }
         default:
             break;
