@@ -4,9 +4,12 @@
 #include "command.h"
 #include "token.h"
 
+// This function appends a NULL pointer to the end of argv,
+// to be compatible with the execv family.
+// argc is NOT incremented accordingly.
 command* command_new(token** toks, size_t n) {
     command* c = malloc(sizeof(command));
-    c->argv = calloc(sizeof(char*), n);
+    c->argv = calloc(sizeof(char*), n + 1);
     c->argc = 0;
 
     for (size_t i = 0; i < n; i++) {
@@ -16,6 +19,7 @@ command* command_new(token** toks, size_t n) {
             c->argc++;
         }
     }
+    c->argv[c->argc] = NULL;
 
     return c;
 }

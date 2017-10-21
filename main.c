@@ -1,3 +1,4 @@
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,6 +7,7 @@
 #include "builtins.h"
 #include "bytebuf.h"
 #include "command.h"
+#include "exec.h"
 #include "token.h"
 
 void printwd()
@@ -48,11 +50,15 @@ void run_line(bytebuf* line) {
         while (builtins->name) {
             if (strcmp(builtins->name, cmd->argv[0]) == 0) {
                 builtins->fn(cmd->argc, cmd->argv);
-                break;
+                goto free;
             }
             builtins++;
         }
+
+        exec_external(cmd->argv);
     }
+
+    free:
     command_free(cmd);
 
     for (size_t i = 0; i < len; i++) {
@@ -64,6 +70,7 @@ void run_line(bytebuf* line) {
 int main() {
     fflush(stdout);
     setbuf(stdout, NULL);
+    signal(SIGINT, SIG_IGN);
 
     bytebuf* line = bytebuf_new();
 
