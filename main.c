@@ -26,8 +26,15 @@ void run_line(bytebuf* line) {
 
     char *remain = line->data;
     while (*remain && *remain != '\n') {
-        token* tok = token_try_ident(&remain);
-        if (tok) {
+        token* tok = token_try(&remain);
+        if (tok == TOKEN_SYNTAX_ERROR) {
+            puts("Syntax error");
+        }
+        else if (tok == 0) {
+            continue;
+        }
+        else
+        {
             if (len == cap) {
                 cap *= 2;
                 toks = realloc(toks, sizeof(token**) * cap);
@@ -55,7 +62,7 @@ void run_line(bytebuf* line) {
             builtins++;
         }
 
-        exec_external(cmd->argv);
+        exec_external(cmd);
     }
 
     free:
