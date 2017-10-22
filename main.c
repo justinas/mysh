@@ -4,6 +4,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <linux/limits.h>
+
 #include <readline/history.h>
 #include <readline/readline.h>
 
@@ -84,8 +86,21 @@ int main() {
     setbuf(stdout, NULL);
     signal(SIGINT, SIG_IGN);
 
-    char *line;
-    while ((line = readline("mysh$ "))) {
+    char wd[PATH_MAX];
+    char *line = NULL;
+    for (;;) {
+        if (!getcwd(wd, sizeof(wd))) {
+            perror("getcwd");
+            return 1;
+        }
+
+        char prompt[sizeof(wd)+32] = {0};
+        sprintf(prompt, "%s$ ", wd);
+        line = readline(prompt);
+        if (!line) {
+            break;
+        }
+
         add_history(line);
         run_line(line);
         free(line);
