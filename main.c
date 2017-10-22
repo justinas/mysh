@@ -48,11 +48,13 @@ void run_line(char* line) {
         }
     }
 
+    /*
     for (size_t i = 0; i < len; i++) {
         printf("%d\t%s\n",
                 toks[i]->type,
                 ((bytebuf*)toks[i]->content)->data);
     }
+    */
 
     command *cmd = command_new(toks, len);
     if (cmd->argc > 0) {

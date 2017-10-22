@@ -37,12 +37,15 @@ token* token_try(char **buf) {
 
 token* token_try_redir(char **buf) {
     token *tok = NULL;
-    switch (**buf) {
+
+    char c;
+    switch ((c = **buf)) {
         case '<':
+        case '>':
             (*buf)++;
             *buf = skip_whitespace(*buf);
             tok = calloc(sizeof(token), 1);
-            tok->type = StdinRedir;
+            tok->type = c == '<' ? StdinRedir : StdoutRedir;
 
             token* file = token_try_ident(buf);
             // No filename, syntax error

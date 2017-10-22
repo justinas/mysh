@@ -8,6 +8,7 @@ typedef struct command {
     char **argv;
     size_t argc;
     char *stdin_path;
+    char *stdout_path;
 } command;
 
 command* command_new(token** toks, size_t n);

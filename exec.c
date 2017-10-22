@@ -17,14 +17,26 @@ void exec_external(command *cmd) {
             return;
         case 0:
             {
-                int fin;
                 if (cmd->stdin_path) {
-                    fin = open(cmd->stdin_path, O_CREAT);
+                    int fin;
+                    fin = open(cmd->stdin_path, O_RDONLY);
                     if (fin == -1) {
-                        perror("fin");
+                        perror("open");
                         exit(1);
                     }
                     if (dup2(fin, STDIN_FILENO) == -1) {
+                        perror("dup2");
+                        exit(1);
+                    }
+                }
+                if (cmd->stdout_path) {
+                    int fout;
+                    fout = open(cmd->stdout_path, O_CREAT | O_WRONLY, 0644);
+                    if (fout == -1) {
+                        perror("open");
+                        exit(1);
+                    }
+                    if (dup2(fout, STDOUT_FILENO) == -1) {
                         perror("dup2");
                         exit(1);
                     }
@@ -49,7 +61,9 @@ void exec_external(command *cmd) {
         if (ret_pid == -1) puts("NOT YET");
         else break;
     }
+    /*
     printf("Ret pid: %d\n", ret_pid);
     printf("Ret status: %d\n", ret_status);
+    */
     return;
 }
