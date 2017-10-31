@@ -31,7 +31,10 @@ void exec_external(command *cmd) {
                 }
                 if (cmd->stdout_path) {
                     int fout;
-                    fout = open(cmd->stdout_path, O_CREAT | O_WRONLY, 0644);
+                    int mode = O_CREAT | O_WRONLY;
+                    if (cmd->stdout_append) mode |= O_APPEND;
+
+                    fout = open(cmd->stdout_path, mode, 0644);
                     if (fout == -1) {
                         perror("open");
                         exit(1);

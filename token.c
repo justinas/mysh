@@ -14,6 +14,7 @@ void token_free(token* tok) {
         case 1:
         case 2:
         case 3:
+        case -3:
         case 4:
             bytebuf_destroy((bytebuf*) tok->content);
             break;
@@ -42,10 +43,15 @@ token* token_try_redir(char **buf) {
     switch ((c = **buf)) {
         case '<':
         case '>':
-            (*buf)++;
             *buf = skip_whitespace(*buf);
+            (*buf)++;
             tok = calloc(sizeof(token), 1);
             tok->type = c == '<' ? StdinRedir : StdoutRedir;
+            if (tok->type == StdoutRedir && **buf == '>') {
+                tok->type = StdoutAppendRedir;
+                (*buf)++;
+            }
+            *buf = skip_whitespace(*buf);
 
             token* file = token_try_ident(buf);
             // No filename, syntax error

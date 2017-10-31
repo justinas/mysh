@@ -33,7 +33,7 @@ void run_line(char* line) {
     while (*remain && *remain != '\n') {
         token* tok = token_try(&remain);
         if (tok == TOKEN_SYNTAX_ERROR) {
-            puts("Syntax error");
+            fprintf(stderr, "Syntax error\n");
         }
         else if (tok == 0) {
             continue;

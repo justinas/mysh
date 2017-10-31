@@ -7,6 +7,7 @@ typedef enum token_type {
     Ident = 1, // content: bytebuf
     StdinRedir = 2, // content: bytebuf
     StdoutRedir = 3, // content: bytebuf
+    StdoutAppendRedir = -3, // content: bytebuf
     StderrRedir = 4, // content: bytebuf
 } token_type;
 

@@ -13,6 +13,7 @@ command* command_new(token** toks, size_t n) {
     c->argc = 0;
     c->stdin_path = NULL;
     c->stdout_path = NULL;
+    c->stdout_append = 0;
 
     for (size_t i = 0; i < n; i++) {
         if (toks[i]->type == Ident) {
@@ -27,6 +28,11 @@ command* command_new(token** toks, size_t n) {
         else if (toks[i]->type == StdoutRedir) {
             bytebuf* buf = (bytebuf*) toks[i]->content;
             c->stdout_path = strdup(buf->data);
+        }
+        else if (toks[i]->type == StdoutAppendRedir) {
+            bytebuf* buf = (bytebuf*) toks[i]->content;
+            c->stdout_path = strdup(buf->data);
+            c->stdout_append = 1;
         }
     }
     c->argv[c->argc] = NULL;

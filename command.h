@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #ifndef COMMAND_H
 #define COMMAND_H
 
@@ -9,6 +11,7 @@ typedef struct command {
     size_t argc;
     char *stdin_path;
     char *stdout_path;
+    bool stdout_append;
 } command;
 
 command* command_new(token** toks, size_t n);
