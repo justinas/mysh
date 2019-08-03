@@ -15,35 +15,33 @@
 #include "exec.h"
 #include "token.h"
 
-void printwd()
-{
+void printwd() {
     static char wd[4096];
     getcwd(wd, sizeof(wd));
     printf("%s", wd);
 }
 
-void run_line(char* line) {
+void run_line(char *line) {
     size_t cap = 1;
     size_t len = 0;
 
-    token** toks = malloc(sizeof(token**));
-    if (!toks) abort();
+    token **toks = malloc(sizeof(token **));
+    if (!toks)
+        abort();
 
     char *remain = line;
     while (*remain && *remain != '\n') {
-        token* tok = token_try(&remain);
+        token *tok = token_try(&remain);
         if (tok == TOKEN_SYNTAX_ERROR) {
             fprintf(stderr, "Syntax error\n");
-        }
-        else if (tok == 0) {
+        } else if (tok == 0) {
             continue;
-        }
-        else
-        {
+        } else {
             if (len == cap) {
                 cap *= 2;
-                toks = realloc(toks, sizeof(token**) * cap);
-                if (!toks) abort();
+                toks = realloc(toks, sizeof(token **) * cap);
+                if (!toks)
+                    abort();
             }
             toks[len] = tok;
             len++;
@@ -72,7 +70,7 @@ void run_line(char* line) {
         exec_external(cmd);
     }
 
-    free:
+free:
     command_free(cmd);
 
     for (size_t i = 0; i < len; i++) {
@@ -94,7 +92,7 @@ int main() {
             return 1;
         }
 
-        char prompt[sizeof(wd)+32] = {0};
+        char prompt[sizeof(wd) + 32] = {0};
         sprintf(prompt, "%s$ ", wd);
         line = readline(prompt);
         if (!line) {
